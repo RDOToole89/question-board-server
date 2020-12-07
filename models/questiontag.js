@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       questionTag.belongsTo(models.question);
+      questionTag.belongsTo(models.tag);
     }
   }
   questionTag.init(

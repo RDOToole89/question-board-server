@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       questionBoard.belongsToMany(models.user, {
+        // causing error message -- was hasMany
         through: "questionBoardUsers",
         foreignKey: "questionBoardId",
       });
