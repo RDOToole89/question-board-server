@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      question.belongsTo(models.user, { foreignKey: "authorId", as: "author" });
+      question.belongsTo(models.user, { foreignKey: "solverId", as: "solver" });
     }
   }
   question.init(
@@ -19,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       questionBoardId: DataTypes.INTEGER,
       upVotes: DataTypes.INTEGER,
       resolved: DataTypes.BOOLEAN,
-      solvedBy: DataTypes.INTEGER,
+      solverId: DataTypes.INTEGER,
     },
     {
       sequelize,
