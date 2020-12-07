@@ -1,7 +1,8 @@
 const cors = require("cors");
 const express = require("express");
 const { cloudinary } = require("./config/cloudinary");
-const authRouter = require("./routers/authorization");
+const authRouter = require("./routers/auth");
+const boardsRouter = require("./routers/questionBoards");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -16,5 +17,6 @@ app.get("/", (req, res, next) => {
 
 // Routers
 app.use("/", authRouter);
+app.use("/boards", boardsRouter);
 
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

@@ -1,10 +1,8 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
+    "url": "postgres://roqopypn:gWVGGh2zhnNhCpsYSPi0QUBENbds4tUt@hattie.db.elephantsql.com:5432/roqopypn",
     "database": "database_development",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "postgres"
   },
   "test": {
     "username": "root",
