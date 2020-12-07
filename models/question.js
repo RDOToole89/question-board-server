@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       question.belongsTo(models.questionBoard);
+      question.belongsTo(models.user, { foreignKey: "authorId", as: "author" });
+      question.belongsTo(models.user, { foreignKey: "solverId", as: "solver" });
     }
   }
   question.init(
@@ -19,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       questionBoardId: DataTypes.INTEGER,
       upVotes: DataTypes.INTEGER,
       resolved: DataTypes.BOOLEAN,
-      solvedBy: DataTypes.INTEGER,
+      solverId: DataTypes.INTEGER,
     },
     {
       sequelize,
