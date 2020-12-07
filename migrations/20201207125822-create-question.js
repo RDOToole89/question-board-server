@@ -16,6 +16,12 @@ module.exports = {
       },
       authorId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       questionBoardId: {
         type: Sequelize.INTEGER,
@@ -26,8 +32,14 @@ module.exports = {
       resolved: {
         type: Sequelize.BOOLEAN,
       },
-      solvedBy: {
+      solverId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,
