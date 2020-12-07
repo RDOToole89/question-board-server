@@ -33,7 +33,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       isSolution: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,

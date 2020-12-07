@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       body: DataTypes.TEXT,
       authorId: DataTypes.INTEGER,
       upVotes: DataTypes.INTEGER,
-      isSolution: DataTypes.INTEGER,
+      isSolution: DataTypes.BOOLEAN,
     },
     {
       sequelize,
