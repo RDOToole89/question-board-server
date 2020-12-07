@@ -16,9 +16,21 @@ module.exports = {
       },
       authorId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       questionBoardId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "questionBoard",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       upVotes: {
         type: Sequelize.INTEGER,
