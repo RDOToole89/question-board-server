@@ -1,6 +1,5 @@
 "use strict";
-// userId: DataTypes.INTEGER,
-// questionBoardId: DataTypes.INTEGER,
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert(
