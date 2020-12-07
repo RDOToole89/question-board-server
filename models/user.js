@@ -10,9 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       user.hasMany(models.question, { foreignKey: "authorId", as: "author" });
       user.hasMany(models.question, { foreignKey: "solverId", as: "solver" });
-      user.belongsToMany(models.questionBoard, {
-        through: "questionBoardUsers",
-        foreignKey: "userId",
+      user.hasMany(models.questionBoard, {
+        // causing error message
+        // through: "questionBoardUsers",
+        // foreignKey: "userId",
       });
     }
   }

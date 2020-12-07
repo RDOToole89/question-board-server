@@ -28,7 +28,7 @@ router.post("/", async (req, res, next) => {
       return res.status(400).send({ message: "Somethings went wrong, question board not created" });
     }
 
-    res.status(200).json;
+    res.status(200).json(newQuestionBoard);
   } catch (e) {
     next(e);
   }
