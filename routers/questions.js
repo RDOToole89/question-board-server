@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const authMiddleware = require("../auth/middleware");
+const user = require("../models/user");
 const User = require("../models").user;
 const Question = require("../models").question;
 
@@ -25,10 +26,15 @@ router.get("/queue", async (req, res, next) => {
   try {
     const allQuestions = await Question.findAll({
       where: { resolved: false, solverId: null },
+      include: {
+        model: User,
+        as: "author",
+        attributes: ["id", "firstName", "lastName", "classNo"],
+      },
     });
     res.send(allQuestions);
   } catch (error) {
-    next(e);
+    next(error);
   }
 });
 
