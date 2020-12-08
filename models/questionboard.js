@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      questionBoard.hasMany(models.question);
       questionBoard.belongsToMany(models.user, {
         // causing error message -- was hasMany
         through: "questionBoardUsers",
