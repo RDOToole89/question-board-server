@@ -1,5 +1,4 @@
 const { Router } = require("express");
-
 const authMiddleware = require("../auth/middleware");
 const User = require("../models").user;
 const Question = require("../models").question;
@@ -32,4 +31,28 @@ router.get("/queue", async (req, res, next) => {
     next(e);
   }
 });
+
+// Route icrements question upvotes
+router.put("/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const questionToUpdate = await Question.findByPk(id);
+    if (questionToUpdate) {
+      try {
+        const updatedQuestion = await questionToUpdate.update({
+          ...questionToUpdate,
+          upVotes: (questionToUpdate.upVotes += 1),
+        });
+
+        res.json(updatedQuestion);
+      } catch (e) {
+        next(e);
+      }
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
