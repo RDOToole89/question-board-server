@@ -39,7 +39,7 @@ router.get("/queue", async (req, res, next) => {
 });
 
 // Route icrements question upvotes
-router.put("/:id", async (req, res, next) => {
+router.put("/upvote/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
