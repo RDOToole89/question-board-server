@@ -57,7 +57,7 @@ router.post("/signup", async (req, res) => {
       classNo,
       isTeacher,
     });
-    console.log("newUser", newUser);
+
     delete newUser.dataValues["password"]; // don't send back the password hash
 
     const token = toJWT({ userId: newUser.id });
