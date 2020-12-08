@@ -61,7 +61,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          tagname: "Sous Chef",
+          tagname: "Noob",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
