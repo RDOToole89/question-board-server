@@ -12,7 +12,9 @@ router.post("/login", async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).send({ message: "Please provide both email and password" });
+      return res
+        .status(400)
+        .send({ message: "Please provide both email and password" });
     }
 
     const user = await User.findOne({ where: { email } });
@@ -24,7 +26,9 @@ router.post("/login", async (req, res, next) => {
     }
 
     if (user.accountBlocked) {
-      return res.status(400).send({ message: "User with specified account has been blocked." });
+      return res
+        .status(400)
+        .send({ message: "User with specified account has been blocked." });
     }
 
     delete user.dataValues["password"]; // don't send back the password hash
@@ -37,26 +41,34 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.post("/signup", async (req, res) => {
-  const { email, password, name } = req.body;
-  if (!email || !password || !name) {
-    return res.status(400).send({ message: "Please provide an email, password and a name" });
+  const { email, password, firstName, lastName, classNo, isTeacher } = req.body;
+  if (!email || !password || !firstName || !lastName || !classNo) {
+    return res.status(400).send({
+      message: "Please provide an email, password, a classNo and a name",
+    });
   }
 
   try {
     const newUser = await User.create({
       email,
       password: bcrypt.hashSync(password, SALT_ROUNDS),
-      name,
+      firstName,
+      lastName,
+      classNo,
+      isTeacher,
     });
-
+    console.log("newUser", newUser);
     delete newUser.dataValues["password"]; // don't send back the password hash
 
     const token = toJWT({ userId: newUser.id });
 
     res.status(201).json({ token, ...newUser.dataValues });
   } catch (error) {
+    console.log(error);
     if (error.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).send({ message: "There is an existing account with this email" });
+      return res
+        .status(400)
+        .send({ message: "There is an existing account with this email" });
     }
 
     return res.status(400).send({ message: "Something went wrong, sorry" });
