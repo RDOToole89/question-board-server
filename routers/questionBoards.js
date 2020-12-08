@@ -21,6 +21,8 @@ router.get("/", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   const { name, description } = req.body;
 
+  console.log("WHATS IN THE BODY?", req.body);
+
   try {
     const newQuestionBoard = await QuestionBoard.create({ name, description });
 
