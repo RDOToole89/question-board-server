@@ -2,6 +2,10 @@ const { Router } = require("express");
 const authMiddleware = require("../auth/middleware");
 const QuestionBoard = require("../models/").questionBoard;
 const Question = require("../models/").question;
+const QuestionTag = require("../models/").questionTag;
+const User = require("../models/").user;
+
+const Tag = require("../models/").tag;
 
 const router = new Router();
 
@@ -39,11 +43,12 @@ router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const board = await QuestionBoard.findAll({
+    const board = await QuestionBoard.findOne({
       where: { id },
       include: [
         {
           model: Question,
+          include: [{ model: Tag }, { model: User, as: "author" }],
         },
       ],
     });
