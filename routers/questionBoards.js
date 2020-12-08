@@ -48,7 +48,7 @@ router.get("/:id", async (req, res, next) => {
       include: [
         {
           model: Question,
-          include: [{ model: Tag }, { model: User, as: "author" }],
+          include: [{ model: User, as: "author" }, { model: Tag }],
         },
       ],
     });
