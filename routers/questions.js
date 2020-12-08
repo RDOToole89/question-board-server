@@ -16,7 +16,21 @@ router.get("/", async (req, res, next) => {
 });
 router.get("/unresolved", async (req, res, next) => {
   try {
-    const allQuestions = await Question.findAll({ where: { resolved: false } });
+    const allQuestions = await Question.findAll({
+      where: { resolved: false },
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: ["id", "firstName", "lastName", "classNo"],
+        },
+        {
+          model: User,
+          as: "solver",
+          attributes: ["id", "firstName", "lastName", "classNo"],
+        },
+      ],
+    });
     res.send(allQuestions);
   } catch (error) {
     next(e);
@@ -49,6 +63,28 @@ router.put("/upvote/:id", async (req, res, next) => {
         const updatedQuestion = await questionToUpdate.update({
           ...questionToUpdate,
           upVotes: (questionToUpdate.upVotes += 1),
+        });
+
+        res.json(updatedQuestion);
+      } catch (e) {
+        next(e);
+      }
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+router.put("/:id", authMiddleware, async (req, res, next) => {
+  const { id } = req.params;
+  const { key, newValue } = req.body;
+
+  try {
+    const questionToUpdate = await Question.findByPk(id);
+    if (questionToUpdate) {
+      try {
+        const updatedQuestion = await questionToUpdate.update({
+          ...questionToUpdate,
+          [key]: newValue,
         });
 
         res.json(updatedQuestion);
