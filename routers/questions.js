@@ -3,6 +3,7 @@ const authMiddleware = require('../auth/middleware');
 const User = require('../models').user;
 const Question = require('../models').question;
 const Comment = require('../models').comment;
+const Tag = require('../models').tag;
 
 const router = new Router();
 
@@ -65,7 +66,8 @@ router.get('/:id', async (req, res, next) => {
 					as: 'author',
 					attributes: [ 'id', 'firstName', 'lastName', 'classNo' ]
 				},
-				{ model: Comment }
+				{ model: Comment },
+				{ model: Tag, attributes: [ 'id', 'tagname', 'createdAt' ] }
 			]
 		});
 
