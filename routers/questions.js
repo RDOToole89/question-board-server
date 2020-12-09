@@ -14,27 +14,29 @@ router.get('/', async (req, res, next) => {
 		next(e);
 	}
 });
-router.get('/unresolved', async (req, res, next) => {
-	try {
-		const allQuestions = await Question.findAll({
-			where: { resolved: false },
-			include: [
-				{
-					model: User,
-					as: 'author',
-					attributes: [ 'id', 'firstName', 'lastName', 'classNo' ]
-				},
-				{
-					model: User,
-					as: 'solver',
-					attributes: [ 'id', 'firstName', 'lastName', 'classNo' ]
-				}
-			]
-		});
-		res.send(allQuestions);
-	} catch (error) {
-		next(e);
-	}
+
+router.get("/unresolved", async (req, res, next) => {
+  try {
+    const allQuestions = await Question.findAll({
+      where: { resolved: false },
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: ["id", "firstName", "lastName", "classNo"],
+        },
+        {
+          model: User,
+          as: "solver",
+          attributes: ["id", "firstName", "lastName", "classNo"],
+        },
+      ],
+    });
+    res.send(allQuestions);
+  } catch (error) {
+    next(error);
+  }
+
 });
 router.get('/queue', async (req, res, next) => {
 	try {
