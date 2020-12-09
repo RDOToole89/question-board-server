@@ -1,3 +1,4 @@
+
 const { Router } = require("express");
 const authMiddleware = require("../auth/middleware");
 const { cloudinary } = require("../config/cloudinary");
@@ -6,6 +7,7 @@ const Question = require("../models").question;
 const Comment = require("../models").comment;
 const Tag = require("../models").tag;
 const QuestionTag = require("../models").questionTag;
+
 
 const router = new Router();
 
@@ -57,6 +59,7 @@ router.get("/queue", async (req, res, next) => {
 });
 
 //  Route to find a question by id with comments
+
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
@@ -69,7 +72,8 @@ router.get("/:id", async (req, res, next) => {
           as: "author",
           attributes: ["id", "firstName", "lastName", "classNo"],
         },
-        { model: Comment },
+        { model: Comment ,include: [{ model: User, as: 'author' }] },
+        { model: Tag, attributes: [ 'id', 'tagname', 'createdAt' ] }
       ],
     });
 
@@ -83,6 +87,7 @@ router.get("/:id", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+
 });
 
 // Route icrements question upvotes
