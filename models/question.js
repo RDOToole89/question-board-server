@@ -1,37 +1,39 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class question extends Model {
-    /**
+	class question extends Model {
+		/**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      question.belongsToMany(models.tag, {
-        through: "questionTags",
-        foreignKey: "questionId",
-      });
-      question.belongsTo(models.questionBoard);
-      question.belongsTo(models.user, { foreignKey: "authorId", as: "author" });
-      question.belongsTo(models.user, { foreignKey: "solverId", as: "solver" });
-    }
-  }
-  question.init(
-    {
-      title: DataTypes.STRING,
-      body: DataTypes.TEXT,
-      authorId: DataTypes.INTEGER,
-      questionBoardId: DataTypes.INTEGER,
-      upVotes: DataTypes.INTEGER,
-      resolved: DataTypes.BOOLEAN,
-      solverId: DataTypes.INTEGER,
-      screenshotURL: DataTypes.STRING,
-    },
-    {
-      sequelize,
-      modelName: "question",
-    }
-  );
-  return question;
+
+		static associate(models) {
+			question.belongsToMany(models.tag, {
+				through: 'questionTags',
+				foreignKey: 'questionId'
+			});
+			question.hasMany(models.comment);
+			question.belongsTo(models.questionBoard);
+			question.belongsTo(models.user, { foreignKey: 'authorId', as: 'author' });
+			question.belongsTo(models.user, { foreignKey: 'solverId', as: 'solver' });
+		}
+	}
+	question.init(
+		{
+			title: DataTypes.STRING,
+			body: DataTypes.TEXT,
+			authorId: DataTypes.INTEGER,
+			questionBoardId: DataTypes.INTEGER,
+			upVotes: DataTypes.INTEGER,
+			resolved: DataTypes.BOOLEAN,
+			solverId: DataTypes.INTEGER,
+			screenshotURL: DataTypes.STRING
+		},
+		{
+			sequelize,
+			modelName: 'question'
+		}
+	);
+	return question;
 };
