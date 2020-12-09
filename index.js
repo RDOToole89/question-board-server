@@ -14,6 +14,7 @@ app.use(cors());
 
 //SOCKETS IO TEST
 
+// Opens socket connection
 const http = require('http');
 const server = http.createServer(app);
 const socket = require('socket.io');
@@ -26,17 +27,16 @@ const io = socket(server, {
 });
 
 io.on('connection', (socket) => {
-	socket.emit('your id', socket.id);
-	socket.on('send message', (body) => {
-		io.emit('message', body);
-	});
+	// emits an event holding the socket id
+	socket.emit('socketId', socket.id);
 
-	socket.on('comment', async (body) => {
-		io.emit('comment', body);
-		console.log('SOCKET.IO FRONTEND BODY', body);
+	// listens for an event "comment" adds the comment to the db and sends back the comment
+	socket.on('comment', async (commentBody) => {
+		io.emit('comment', commentBody);
+		console.log('SOCKET.IO FRONTEND BODY', commentBody);
 
-		const newComment = await Comment.create({ ...body });
-		console.log(newComment.dataValues);
+		const newComment = await Comment.create({ ...commentBody });
+		console.log('NEWLY CREATED COMMENT', newComment.dataValues);
 	});
 });
 

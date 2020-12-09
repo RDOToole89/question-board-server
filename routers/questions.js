@@ -68,7 +68,7 @@ router.get('/:id', async (req, res, next) => {
 					as: 'author',
 					attributes: [ 'id', 'firstName', 'lastName', 'classNo' ]
 				},
-				{ model: Comment },
+				{ model: Comment, include: [{ model: User, as: 'author' }] },
 				{ model: Tag, attributes: [ 'id', 'tagname', 'createdAt' ] }
 			]
 		});
