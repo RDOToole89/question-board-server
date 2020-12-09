@@ -33,7 +33,7 @@ router.get("/unresolved", async (req, res, next) => {
     });
     res.send(allQuestions);
   } catch (error) {
-    next(e);
+    next(error);
   }
 });
 router.get("/queue", async (req, res, next) => {
