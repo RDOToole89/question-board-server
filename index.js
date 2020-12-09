@@ -1,6 +1,6 @@
 const cors = require("cors");
 const express = require("express");
-const { cloudinary } = require("./config/cloudinary");
+
 const authRouter = require("./routers/auth");
 const boardsRouter = require("./routers/questionBoards");
 const questionsRouter = require("./routers/questions");

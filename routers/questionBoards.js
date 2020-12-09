@@ -28,7 +28,9 @@ router.post("/", async (req, res, next) => {
     const newQuestionBoard = await QuestionBoard.create({ name, description });
 
     if (!newQuestionBoard) {
-      return res.status(400).send({ message: "Somethings went wrong, question board not created" });
+      return res
+        .status(400)
+        .send({ message: "Somethings went wrong, question board not created" });
     }
 
     res.status(200).json(newQuestionBoard);
@@ -50,8 +52,6 @@ router.get("/:id", async (req, res, next) => {
         },
       ],
     });
-
-    console.log(board);
 
     if (!board) {
       return res.status(400).send({ message: "Something went wrong, sorry" });
