@@ -1,9 +1,11 @@
+
 const cors = require('cors');
 const express = require('express');
 const authRouter = require('./routers/auth');
 const boardsRouter = require('./routers/questionBoards');
 const questionsRouter = require('./routers/questions');
 const Comment = require('./models').comment;
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
