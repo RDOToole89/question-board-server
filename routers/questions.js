@@ -1,4 +1,3 @@
-
 const { Router } = require("express");
 const authMiddleware = require("../auth/middleware");
 const { cloudinary } = require("../config/cloudinary");
@@ -59,7 +58,6 @@ router.get("/queue", async (req, res, next) => {
 });
 
 //  Route to find a question by id with comments
-
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
