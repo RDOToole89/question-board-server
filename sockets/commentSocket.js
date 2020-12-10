@@ -1,35 +1,11 @@
-const cors = require('cors');
-const express = require('express');
-const authRouter = require('./routers/auth');
-const boardsRouter = require('./routers/questionBoards');
-const questionsRouter = require('./routers/questions');
+const io = require('../config/socketIo');
 const Comment = require('./models').comment;
 const Question = require('./models').question;
 const User = require('./models').user;
 const Tag = require('./models').tag;
-
-const app = express();
-const PORT = process.env.PORT || 4000;
-
-// MiddleWares
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(cors());
-
 //SOCKETS IO TEST
 
 // Opens socket connection
-const http = require('http');
-const server = http.createServer(app);
-const socket = require('socket.io');
-const io = socket(server, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-});
-
 io.on('connection', (socket) => {
   console.log('client connected');
   // emits an event holding the socket id
@@ -41,6 +17,7 @@ io.on('connection', (socket) => {
     const { questionId } = comment;
 
     // console.log('WHATS IN COMMENT', comment);
+
     const newComment = await Comment.create({ ...comment });
     // console.log('NEWLY CREATED COMMENT', newComment.dataValues);
 
@@ -58,20 +35,11 @@ io.on('connection', (socket) => {
     });
 
     io.emit('comment', questionToUpdate);
-
-    socket.on('disconnect', () => {
-      console.log('client disconnected');
-    });
   });
 });
 
-app.get('/', (req, res, next) => {
-  res.json('Hello World');
+io.on('disconnect', (socket) => {
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
 });
-
-// Routers
-app.use('/', authRouter);
-app.use('/boards', boardsRouter);
-app.use('/questions', questionsRouter);
-
-server.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
