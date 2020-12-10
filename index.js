@@ -82,6 +82,13 @@ io.on("connection", (socket) => {
 
     io.emit("questionUpdated", updatedQuestion);
   });
+  socket.on("deleteQuestionById", async (questionId) => {
+    const questionToDelete = await Question.findByPk(questionId);
+
+    const updatedQuestion = await questionToDelete.destroy();
+
+    io.emit("questionUpdated", questionToDelete);
+  });
 });
 
 app.get("/", (req, res, next) => {
