@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { Op } = require("sequelize");
 const authMiddleware = require("../auth/middleware");
 const { cloudinary } = require("../config/cloudinary");
 const User = require("../models").user;
@@ -6,7 +7,6 @@ const Question = require("../models").question;
 const Comment = require("../models").comment;
 const Tag = require("../models").tag;
 const QuestionTag = require("../models").questionTag;
-
 
 const router = new Router();
 
@@ -70,8 +70,8 @@ router.get("/:id", async (req, res, next) => {
           as: "author",
           attributes: ["id", "firstName", "lastName", "classNo"],
         },
-        { model: Comment ,include: [{ model: User, as: 'author' }] },
-        { model: Tag, attributes: [ 'id', 'tagname', 'createdAt' ] }
+        { model: Comment, include: [{ model: User, as: "author" }] },
+        { model: Tag, attributes: ["id", "tagname", "createdAt"] },
       ],
     });
 
@@ -85,7 +85,6 @@ router.get("/:id", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-
 });
 
 // Route icrements question upvotes
@@ -154,10 +153,20 @@ router.post("/", authMiddleware, async (req, res, next) => {
       upVotes: 0,
       solverId: null,
     });
-    console.log("tags", tags);
-    tags.forEach(async (tag) => {
-      const tagExist = await Tag.findOne({ where: { tagname: tag } });
 
+    const whereClause = tags.map((tag) => {
+      return { tagname: tag };
+    });
+    const allTags = await Tag.findAll({
+      where: {
+        [Op.or]: [...whereClause],
+      },
+    });
+
+    tags.forEach(async (tag) => {
+      const tagExist = allTags.find(
+        (tagfromArray) => tagfromArray.tagname === tag
+      );
       if (tagExist) {
         const newQuestionTag = await QuestionTag.create({
           questionId: newQuestion.id,
