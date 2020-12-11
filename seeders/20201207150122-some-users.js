@@ -23,7 +23,7 @@ module.exports = {
           email: "thibaud@gmail.com",
           password: bcrypt.hashSync("test", SALT_ROUNDS),
           classNo: 46,
-          isTeacher: true,
+          isTeacher: false,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
