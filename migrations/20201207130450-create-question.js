@@ -1,30 +1,54 @@
-"use strict";
+'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("questionTags", {
+    await queryInterface.createTable("questions", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      tagId: {
+      title: {
+        type: Sequelize.STRING,
+      },
+      body: {
+        type: Sequelize.TEXT,
+      },
+      authorId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "tags",
+          model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-      questionId: {
+      questionBoardId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "questions",
+          model: "questionBoards",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
+      },
+      upVotes: {
+        type: Sequelize.INTEGER,
+      },
+      resolved: {
+        type: Sequelize.BOOLEAN,
+      },
+      solverId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      },
+      screenshotURL: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +61,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("questionTags");
+    await queryInterface.dropTable("questions");
   },
 };

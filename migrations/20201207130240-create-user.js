@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      class: {
+      classNo: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },

@@ -1,26 +1,26 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("questionTags", {
+    await queryInterface.createTable("questionBoardUsers", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      tagId: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "tags",
+          model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-      questionId: {
+      questionBoardId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "questions",
+          model: "questionBoards",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -37,6 +37,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("questionTags");
+    await queryInterface.dropTable("questionBoardUsers");
   },
 };
