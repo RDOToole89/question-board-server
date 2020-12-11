@@ -1,47 +1,46 @@
-const cors = require('cors');
-const express = require('express');
-const authRouter = require('./routers/auth');
-const boardsRouter = require('./routers/questionBoards');
-const questionsRouter = require('./routers/questions');
-const Comment = require('./models').comment;
-const Question = require('./models').question;
-const QuestionBoard = require('./models').questionBoard;
-const User = require('./models').user;
-const Tag = require('./models').tag;
-
+const cors = require("cors");
+const express = require("express");
+const authRouter = require("./routers/auth");
+const boardsRouter = require("./routers/questionBoards");
+const questionsRouter = require("./routers/questions");
+const Comment = require("./models").comment;
+const Question = require("./models").question;
+const QuestionBoard = require("./models").questionBoard;
+const User = require("./models").user;
+const Tag = require("./models").tag;
+const { CLIENT_URL } = require("./config/constants");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // MiddleWares
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
 
 //SOCKETS IO TEST
 
 // Opens socket connection
-const http = require('http');
+const http = require("http");
 const server = http.createServer(app);
-const socket = require('socket.io');
+const socket = require("socket.io");
 const io = socket(server, {
   cors: {
-
-    origin: CLIENT_URL || "http://localhost:3000",
+    origin: CLIENT_URL,
     methods: ["GET", "POST"],
 
     credentials: true,
   },
 });
 
-io.on('connection', (socket) => {
-  console.log('client connected');
+io.on("connection", (socket) => {
+  console.log("client connected");
 
   // emits an event holding the socket id
-  socket.emit('socketId', socket.id);
+  socket.emit("socketId", socket.id);
 
   // listens for an event "comment" adds the comment to the db and sends "EMITS" back the comment
   // socket.error
-  socket.on('comment', async (comment) => {
+  socket.on("comment", async (comment) => {
     const { questionId } = comment;
 
     // console.log('WHATS IN COMMENT', comment);
@@ -53,21 +52,21 @@ io.on('connection', (socket) => {
       include: [
         {
           model: User,
-          as: 'author',
-          attributes: ['id', 'firstName', 'lastName', 'classNo'],
+          as: "author",
+          attributes: ["id", "firstName", "lastName", "classNo"],
         },
-        { model: Comment, include: [{ model: User, as: 'author' }] },
-        { model: Tag, attributes: ['id', 'tagname', 'createdAt'] },
+        { model: Comment, include: [{ model: User, as: "author" }] },
+        { model: Tag, attributes: ["id", "tagname", "createdAt"] },
       ],
     });
 
-    socket.on('disconnect', () => {
-      console.log('client disconnected');
+    socket.on("disconnect", () => {
+      console.log("client disconnected");
     });
 
-    io.emit('comment', questionToUpdate);
+    io.emit("comment", questionToUpdate);
   });
-  socket.on('resolveQuestion', async (questionId) => {
+  socket.on("resolveQuestion", async (questionId) => {
     //const question_Id = questionId.questionId;
 
     const questionToUpdate = await Question.findByPk(questionId);
@@ -76,9 +75,9 @@ io.on('connection', (socket) => {
       resolved: true,
     });
 
-    io.emit('questionUpdated', updatedQuestion);
+    io.emit("questionUpdated", updatedQuestion);
   });
-  socket.on('updateSolverId', async ({ questionId, solverId }) => {
+  socket.on("updateSolverId", async ({ questionId, solverId }) => {
     //const question_Id = questionId.questionId;
 
     const questionToUpdate = await Question.findByPk(questionId);
@@ -87,24 +86,24 @@ io.on('connection', (socket) => {
       solverId,
     });
 
-    io.emit('questionUpdated', updatedQuestion);
+    io.emit("questionUpdated", updatedQuestion);
   });
-  socket.on('deleteQuestionById', async (questionId) => {
+  socket.on("deleteQuestionById", async (questionId) => {
     const questionToDelete = await Question.findByPk(questionId);
 
     const updatedQuestion = await questionToDelete.destroy();
 
-    io.emit('questionUpdated', questionToDelete);
+    io.emit("questionUpdated", questionToDelete);
   });
 });
 
-app.get('/', (req, res, next) => {
-  res.json('Hello World');
+app.get("/", (req, res, next) => {
+  res.json("Hello World");
 });
 
 // Routers
-app.use('/', authRouter);
-app.use('/boards', boardsRouter);
-app.use('/questions', questionsRouter);
+app.use("/", authRouter);
+app.use("/boards", boardsRouter);
+app.use("/questions", questionsRouter);
 
 server.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
