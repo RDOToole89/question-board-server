@@ -5,6 +5,7 @@ const boardsRouter = require('./routers/questionBoards');
 const questionsRouter = require('./routers/questions');
 const Comment = require('./models').comment;
 const Question = require('./models').question;
+const QuestionBoard = require('./models').questionBoard;
 const User = require('./models').user;
 const Tag = require('./models').tag;
 
@@ -32,6 +33,7 @@ const io = socket(server, {
 
 io.on('connection', (socket) => {
   console.log('client connected');
+
   // emits an event holding the socket id
   socket.emit('socketId', socket.id);
 
@@ -57,11 +59,40 @@ io.on('connection', (socket) => {
       ],
     });
 
-    io.emit('comment', questionToUpdate);
-
     socket.on('disconnect', () => {
       console.log('client disconnected');
     });
+
+    io.emit('comment', questionToUpdate);
+  });
+  socket.on('resolveQuestion', async (questionId) => {
+    //const question_Id = questionId.questionId;
+
+    const questionToUpdate = await Question.findByPk(questionId);
+    const updatedQuestion = await questionToUpdate.update({
+      ...questionToUpdate,
+      resolved: true,
+    });
+
+    io.emit('questionUpdated', updatedQuestion);
+  });
+  socket.on('updateSolverId', async ({ questionId, solverId }) => {
+    //const question_Id = questionId.questionId;
+
+    const questionToUpdate = await Question.findByPk(questionId);
+    const updatedQuestion = await questionToUpdate.update({
+      ...questionToUpdate,
+      solverId,
+    });
+
+    io.emit('questionUpdated', updatedQuestion);
+  });
+  socket.on('deleteQuestionById', async (questionId) => {
+    const questionToDelete = await Question.findByPk(questionId);
+
+    const updatedQuestion = await questionToDelete.destroy();
+
+    io.emit('questionUpdated', questionToDelete);
   });
 });
 
