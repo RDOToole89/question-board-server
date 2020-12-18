@@ -1,10 +1,11 @@
-// const socket = require('socket.io');
-// const io = socket(server, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST'],
-//     credentials: true,
-//   },
-// });
+const socket = require('socket.io');
+const { CLIENT_URL } = require('./constants');
+const io = socket(server, {
+  cors: {
+    origin: CLIENT_URL,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 
 // module.exports = io;
